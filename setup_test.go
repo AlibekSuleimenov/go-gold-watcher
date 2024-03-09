@@ -1,6 +1,9 @@
 package main
 
 import (
+	"bytes"
+	"fyne.io/fyne/v2/test"
+	"io"
 	"net/http"
 	"os"
 	"testing"
@@ -9,6 +12,9 @@ import (
 var testApp Config
 
 func TestMain(m *testing.M) {
+	a := test.NewApp()
+	testApp.App = a
+	testApp.HttpClient = client
 
 	os.Exit(m.Run())
 }
@@ -43,3 +49,12 @@ func (f RoundTripFunc) RoundTrip(request *http.Request) (*http.Response, error) 
 func NewTestClient(fn RoundTripFunc) *http.Client {
 	return &http.Client{Transport: fn}
 }
+
+// client is a package variable that represents an HTTP client
+var client = NewTestClient(func(request *http.Request) *http.Response {
+	return &http.Response{
+		StatusCode: http.StatusOK,
+		Body:       io.NopCloser(bytes.NewBufferString(jsonToReturn)),
+		Header:     make(http.Header),
+	}
+})
