@@ -9,9 +9,10 @@ import (
 
 // Config struct holds configuration data for the application
 type Config struct {
-	App      fyne.App
-	InfoLog  *log.Logger
-	ErrorLog *log.Logger
+	App        fyne.App
+	InfoLog    *log.Logger
+	ErrorLog   *log.Logger
+	MainWindow fyne.Window
 }
 
 var myApp Config
@@ -31,8 +32,13 @@ func main() {
 	// create a database repository
 
 	// create and size a fyne window
-	window := fyneApp.NewWindow("GoGoldWatcher")
+	myApp.MainWindow = fyneApp.NewWindow("GoGoldWatcher")
+	myApp.MainWindow.Resize(fyne.NewSize(300, 200))
+	myApp.MainWindow.SetFixedSize(true)
+	myApp.MainWindow.SetMaster()
+
+	myApp.makeUI()
 
 	// show and run app
-	window.ShowAndRun()
+	myApp.MainWindow.ShowAndRun()
 }
