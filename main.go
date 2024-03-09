@@ -3,6 +3,7 @@ package main
 import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
+	"fyne.io/fyne/v2/widget"
 	"log"
 	"net/http"
 	"os"
@@ -15,6 +16,7 @@ type Config struct {
 	ErrorLog       *log.Logger
 	MainWindow     fyne.Window
 	PriceContainer *fyne.Container
+	Toolbar        *widget.Toolbar
 	HttpClient     *http.Client
 }
 
