@@ -5,6 +5,7 @@ import (
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/theme"
+	"time"
 )
 
 // makeUI creates the user interface for displaying the current price of gold.
@@ -36,6 +37,13 @@ func (app *Config) makeUI() {
 	// add container to window
 	finalContent := container.NewVBox(priceContent, toolbar, tabs)
 	app.MainWindow.SetContent(finalContent)
+
+	// go routine to refresh the prices in background
+	go func() {
+		for range time.Tick(time.Second * 5) {
+			app.refreshPriceContent()
+		}
+	}()
 }
 
 // refreshPriceContent updates the price and chart content displayed in the application
