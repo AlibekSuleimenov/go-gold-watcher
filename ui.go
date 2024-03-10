@@ -1,6 +1,10 @@
 package main
 
-import "fyne.io/fyne/v2/container"
+import (
+	"fyne.io/fyne/v2/canvas"
+	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/theme"
+)
 
 // makeUI creates the user interface for displaying the current price of gold.
 func (app *Config) makeUI() {
@@ -19,7 +23,14 @@ func (app *Config) makeUI() {
 	toolbar := app.getToolbar()
 	app.Toolbar = toolbar
 
+	// get app tabs
+	tabs := container.NewAppTabs(
+		container.NewTabItemWithIcon("Prices", theme.HomeIcon(), canvas.NewText("Price content goes here", nil)),
+		container.NewTabItemWithIcon("Holdings", theme.InfoIcon(), canvas.NewText("Holdings content goes here", nil)),
+	)
+	tabs.SetTabLocation(container.TabLocationTop)
+
 	// add container to window
-	finalContent := container.NewVBox(priceContent, toolbar)
+	finalContent := container.NewVBox(priceContent, toolbar, tabs)
 	app.MainWindow.SetContent(finalContent)
 }
