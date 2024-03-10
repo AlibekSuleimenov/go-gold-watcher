@@ -16,7 +16,7 @@ type Repository interface {
 	Migrate() error                                    // Migrate performs any necessary database migrations.
 	InsertHolding(holding Holdings) (*Holdings, error) // InsertHolding inserts a new holding into the repository and returns the inserted holding.
 	AllHoldings() ([]Holdings, error)                  // AllHoldings returns all holdings stored in the repository.
-	GetHoldingByID(id int64) (*Holdings, error)        // GetHoldingByID retrieves a holding by its ID from the repository.
+	GetHoldingByID(id int) (*Holdings, error)          // GetHoldingByID retrieves a holding by its ID from the repository.
 	UpdateHolding(id int64, updated Holdings) error    // UpdateHolding updates a holding in the repository by its ID with the provided updated holding information.
 	DeleteHolding(id int64) error                      // DeleteHolding deletes a holding from the repository by its ID.
 }
