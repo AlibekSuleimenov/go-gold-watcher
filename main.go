@@ -11,13 +11,14 @@ import (
 
 // Config struct holds configuration data for the application
 type Config struct {
-	App            fyne.App
-	InfoLog        *log.Logger
-	ErrorLog       *log.Logger
-	MainWindow     fyne.Window
-	PriceContainer *fyne.Container
-	Toolbar        *widget.Toolbar
-	HttpClient     *http.Client
+	App                 fyne.App        // App holds the Fyne application instance.
+	InfoLog             *log.Logger     // InfoLog is the logger for informational messages.
+	ErrorLog            *log.Logger     // ErrorLog is the logger for error messages.
+	MainWindow          fyne.Window     // MainWindow is the main application window.
+	PriceContainer      *fyne.Container // PriceContainer holds the container for displaying price information.
+	Toolbar             *widget.Toolbar // Toolbar holds the toolbar for the application.
+	PriceChartContainer *fyne.Container // PriceChartContainer holds the container for displaying the price chart.
+	HttpClient          *http.Client    // HttpClient is the HTTP client used for making API requests.
 }
 
 var myApp Config
