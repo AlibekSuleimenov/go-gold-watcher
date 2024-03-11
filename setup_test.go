@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"fyne.io/fyne/v2/test"
+	"github.com/alibeksuleimenov/go-gold-watcher/repository"
 	"io"
 	"net/http"
 	"os"
@@ -14,6 +15,8 @@ var testApp Config
 func TestMain(m *testing.M) {
 	a := test.NewApp()
 	testApp.App = a
+	testApp.MainWindow = a.NewWindow("")
+	testApp.DB = repository.NewTestRepository()
 	testApp.HttpClient = client
 
 	os.Exit(m.Run())
