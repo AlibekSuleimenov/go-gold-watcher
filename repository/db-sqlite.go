@@ -23,7 +23,7 @@ func (repo *SQLiteRepository) Migrate() error {
 	query := `create table if not exists holdings(
                   id integer primary key autoincrement,
                   amount real not null,
-                  purchase_data integer not null,
+                  purchase_date integer not null,
                   purchase_price integer not null)`
 
 	_, err := repo.Conn.Exec(query)
@@ -83,7 +83,7 @@ func (repo *SQLiteRepository) AllHoldings() ([]Holdings, error) {
 
 // GetHoldingByID retrieves a holding by its ID from the database.
 func (repo *SQLiteRepository) GetHoldingByID(id int) (*Holdings, error) {
-	row := repo.Conn.QueryRow("select id amount, purchase_data, purchase_price from holdings where id = ?", id)
+	row := repo.Conn.QueryRow("select id, amount, purchase_date, purchase_price from holdings where id = ?", id)
 
 	var h Holdings
 	var unixTime int64
@@ -109,7 +109,7 @@ func (repo *SQLiteRepository) UpdateHolding(id int64, updated Holdings) error {
 		return errors.New("invalid updated ID")
 	}
 
-	stmt := "update holdings set amount = ?, purchase_data = ?, purchase_price = ? where id = ?"
+	stmt := "update holdings set amount = ?, purchase_date = ?, purchase_price = ? where id = ?"
 
 	res, err := repo.Conn.Exec(stmt, updated.Amount, updated.PurchaseDate.Unix(), updated.PurchasePrice, id)
 	if err != nil {
@@ -141,7 +141,7 @@ func (repo *SQLiteRepository) DeleteHolding(id int64) error {
 	}
 
 	if rowsAffected == 0 {
-		return errUpdateFailed
+		return errDeleteFailed
 	}
 
 	return nil
