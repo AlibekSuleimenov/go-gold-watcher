@@ -1,9 +1,12 @@
 package main
 
 import (
+	"database/sql"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/widget"
+	"github.com/alibeksuleimenov/go-gold-watcher/repository"
+	_ "github.com/glebarez/go-sqlite"
 	"log"
 	"net/http"
 	"os"
@@ -11,20 +14,21 @@ import (
 
 // Config struct holds configuration data for the application
 type Config struct {
-	App                 fyne.App        // App holds the Fyne application instance.
-	InfoLog             *log.Logger     // InfoLog is the logger for informational messages.
-	ErrorLog            *log.Logger     // ErrorLog is the logger for error messages.
-	MainWindow          fyne.Window     // MainWindow is the main application window.
-	PriceContainer      *fyne.Container // PriceContainer holds the container for displaying price information.
-	Toolbar             *widget.Toolbar // Toolbar holds the toolbar for the application.
-	PriceChartContainer *fyne.Container // PriceChartContainer holds the container for displaying the price chart.
-	HttpClient          *http.Client    // HttpClient is the HTTP client used for making API requests.
+	App                 fyne.App              // App holds the Fyne application instance.
+	InfoLog             *log.Logger           // InfoLog is the logger for informational messages.
+	ErrorLog            *log.Logger           // ErrorLog is the logger for error messages.
+	DB                  repository.Repository // DB is the database repository for interacting with the database.
+	MainWindow          fyne.Window           // MainWindow is the main application window.
+	PriceContainer      *fyne.Container       // PriceContainer holds the container for displaying price information.
+	Toolbar             *widget.Toolbar       // Toolbar holds the toolbar for the application.
+	PriceChartContainer *fyne.Container       // PriceChartContainer holds the container for displaying the price chart.
+	HttpClient          *http.Client          // HttpClient is the HTTP client used for making API requests.
 }
-
-var myApp Config
 
 // main is the entry point of the application
 func main() {
+	var myApp Config
+
 	// create fyne app
 	fyneApp := app.NewWithID("go-gold-watcher")
 	myApp.App = fyneApp
@@ -35,8 +39,13 @@ func main() {
 	myApp.ErrorLog = log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 
 	// open a connection to db
+	sqlDB, err := myApp.ConnectSQL()
+	if err != nil {
+		log.Panic(err)
+	}
 
 	// create a database repository
+	myApp.setupDB(sqlDB)
 
 	// create and size a fyne window
 	myApp.MainWindow = fyneApp.NewWindow("GoGoldWatcher")
@@ -48,4 +57,35 @@ func main() {
 
 	// show and run app
 	myApp.MainWindow.ShowAndRun()
+}
+
+// ConnectSQL establishes a connection to the SQL database and returns a pointer to the database connection.
+func (app *Config) ConnectSQL() (*sql.DB, error) {
+	path := ""
+
+	if os.Getenv("DB_PATH") != "" {
+		path = os.Getenv("DB_PATH")
+	} else {
+		path = app.App.Storage().RootURI().Path() + "/sql.db"
+		app.InfoLog.Println("DB in:", path)
+	}
+
+	db, err := sql.Open("sqlite", path)
+	if err != nil {
+		return nil, err
+	}
+
+	return db, nil
+}
+
+// setupDB initializes the database repository with the given SQL database instance.
+// It migrates the database schema if necessary and logs any errors.
+func (app *Config) setupDB(sqlDB *sql.DB) {
+	app.DB = repository.NewSQLiteRepository(sqlDB)
+
+	err := app.DB.Migrate()
+	if err != nil {
+		app.ErrorLog.Println(err)
+		log.Panic()
+	}
 }

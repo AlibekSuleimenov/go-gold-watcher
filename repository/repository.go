@@ -1,6 +1,6 @@
 package repository
 
-// Package repository provides an interface and methods for interacting with a holdings repository.
+// Package repository provides an interface and methods for interacting with a holding's repository.
 import (
 	"errors"
 	"time"
