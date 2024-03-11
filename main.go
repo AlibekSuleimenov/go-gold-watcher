@@ -22,6 +22,8 @@ type Config struct {
 	PriceContainer      *fyne.Container       // PriceContainer holds the container for displaying price information.
 	Toolbar             *widget.Toolbar       // Toolbar holds the toolbar for the application.
 	PriceChartContainer *fyne.Container       // PriceChartContainer holds the container for displaying the price chart.
+	Holdings            [][]interface{}       // Holdings holds the data for displaying holdings information.
+	HoldingsTable       *widget.Table         // HoldingsTable is the table widget for displaying holdings information.
 	HttpClient          *http.Client          // HttpClient is the HTTP client used for making API requests.
 }
 
