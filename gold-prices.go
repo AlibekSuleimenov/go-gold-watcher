@@ -10,7 +10,7 @@ import (
 )
 
 // currency represents the currency in which the gold price is fetched.
-var currency = "USD"
+var currency = "KZT"
 
 // Gold represents the structure of the gold prices fetched from the API.
 type Gold struct {

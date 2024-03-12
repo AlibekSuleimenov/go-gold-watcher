@@ -2,6 +2,7 @@ package main
 
 import (
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
@@ -21,11 +22,33 @@ func (app *Config) getToolbar() *widget.Toolbar {
 			app.refreshPriceContent()
 		}),
 		widget.NewToolbarAction(theme.SettingsIcon(), func() {
-
+			w := app.ShowPreferences()
+			w.Resize(fyne.NewSize(300, 200))
+			w.Show()
 		}),
 	)
 
 	return toolbar
+}
+
+func (app *Config) ShowPreferences() fyne.Window {
+	win := app.App.NewWindow("Preferences")
+
+	lbl := widget.NewLabel("Preferred currency")
+	cur := widget.NewSelect([]string{"GBP", "KZT", "USD"}, func(value string) {
+		currency = value
+		app.App.Preferences().SetString("currency", value)
+	})
+	cur.Selected = currency
+
+	btn := widget.NewButton("Save", func() {
+		win.Close()
+		app.refreshPriceContent()
+	})
+	btn.Importance = widget.HighImportance
+	win.SetContent(container.NewVBox(lbl, cur, btn))
+
+	return win
 }
 
 // addHoldingsDialog creates a dialog for adding gold holdings.
