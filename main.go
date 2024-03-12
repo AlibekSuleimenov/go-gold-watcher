@@ -14,17 +14,21 @@ import (
 
 // Config struct holds configuration data for the application
 type Config struct {
-	App                 fyne.App              // App holds the Fyne application instance.
-	InfoLog             *log.Logger           // InfoLog is the logger for informational messages.
-	ErrorLog            *log.Logger           // ErrorLog is the logger for error messages.
-	DB                  repository.Repository // DB is the database repository for interacting with the database.
-	MainWindow          fyne.Window           // MainWindow is the main application window.
-	PriceContainer      *fyne.Container       // PriceContainer holds the container for displaying price information.
-	Toolbar             *widget.Toolbar       // Toolbar holds the toolbar for the application.
-	PriceChartContainer *fyne.Container       // PriceChartContainer holds the container for displaying the price chart.
-	Holdings            [][]interface{}       // Holdings holds the data for displaying holdings information.
-	HoldingsTable       *widget.Table         // HoldingsTable is the table widget for displaying holdings information.
-	HttpClient          *http.Client          // HttpClient is the HTTP client used for making API requests.
+	App                            fyne.App              // App holds the Fyne application instance.
+	InfoLog                        *log.Logger           // InfoLog is the logger for informational messages.
+	ErrorLog                       *log.Logger           // ErrorLog is the logger for error messages.
+	DB                             repository.Repository // DB is the database repository for interacting with the database.
+	MainWindow                     fyne.Window           // MainWindow is the main application window.
+	PriceContainer                 *fyne.Container       // PriceContainer holds the container for displaying price information.
+	Toolbar                        *widget.Toolbar       // Toolbar holds the toolbar for the application.
+	PriceChartContainer            *fyne.Container       // PriceChartContainer holds the container for displaying the price chart.
+	Holdings                       [][]interface{}       // Holdings holds the data for displaying holdings information.
+	HoldingsTable                  *widget.Table         // HoldingsTable is the table widget for displaying holdings information.
+	HttpClient                     *http.Client          // HttpClient is the HTTP client used for making API requests.
+	AddHoldingsPurchaseAmountEntry *widget.Entry         // AddHoldingsPurchaseAmountEntry is the widget entry for entering purchase amount.
+	AddHoldingsPurchaseDateEntry   *widget.Entry         // AddHoldingsPurchaseDateEntry is the widget entry for entering purchase date.
+	AddHoldingsPurchasePriceEntry  *widget.Entry         // AddHoldingsPurchasePriceEntry is the widget entry for entering purchase price.
+
 }
 
 // main is the entry point of the application
