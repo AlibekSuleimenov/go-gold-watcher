@@ -5,6 +5,9 @@ import (
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
+	"github.com/alibeksuleimenov/go-gold-watcher/repository"
+	"strconv"
+	"time"
 )
 
 // getToolbar creates and returns a new toolbar widget
@@ -37,6 +40,32 @@ func (app *Config) addHoldingsDialog() dialog.Dialog {
 	app.AddHoldingsPurchaseDateEntry = purchaseDateEntry
 	app.AddHoldingsPurchasePriceEntry = purchasePriceEntry
 
+	dateValidator := func(s string) error {
+		if _, err := time.Parse("2006-01-02", s); err != nil {
+			return err
+		}
+		return nil
+	}
+	purchaseDateEntry.Validator = dateValidator
+
+	isIntValidator := func(s string) error {
+		_, err := strconv.Atoi(s)
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+	addAMountEntry.Validator = isIntValidator
+
+	isFloatValidator := func(s string) error {
+		_, err := strconv.ParseFloat(s, 32)
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+	purchasePriceEntry.Validator = isFloatValidator
+
 	purchaseDateEntry.PlaceHolder = "YYYY-MM-DD"
 
 	// create dialog
@@ -51,7 +80,19 @@ func (app *Config) addHoldingsDialog() dialog.Dialog {
 		},
 		func(valid bool) {
 			if valid {
-				// TODO
+				amount, _ := strconv.Atoi(addAMountEntry.Text)
+				purchaseDate, _ := time.Parse("2006-01-02", purchaseDateEntry.Text)
+				purchasePrice, _ := strconv.ParseFloat(purchasePriceEntry.Text, 32)
+
+				_, err := app.DB.InsertHolding(repository.Holdings{
+					Amount:        amount,
+					PurchaseDate:  purchaseDate,
+					PurchasePrice: int(purchasePrice),
+				})
+				if err != nil {
+					app.ErrorLog.Println(err)
+				}
+				app.refreshHoldingsTable()
 			}
 		},
 		app.MainWindow,
